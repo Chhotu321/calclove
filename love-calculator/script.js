@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         if (index < text.length) {
             typingEffect.innerHTML += text.charAt(index);
             index++;
-            setTimeout(type, 100); // Adjust typing speed here
+            setTimeout(type, 50); // Adjust typing speed here if needed
         }
     }
 
@@ -21,6 +21,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         document.getElementById('name2').value = latestNames.name2;
     }
 });
+
 
 var name1 = document.getElementById("name1");
 var name2 = document.getElementById("name2");
