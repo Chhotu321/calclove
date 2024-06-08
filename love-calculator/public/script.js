@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', async function () {
-    const text = "Hello! I am Ketan Kumar, a noob web developer pursuing BCA from a shit of piece college in Patna. I built this love calculator for fun purposes only.";
+    const text = "Hello! I am Ketan Kumar, a noob web developer pursuing BCA from a piece of shit college in Patna. I built this love calculator for fun purposes only.";
     const typingEffect = document.getElementById('typing-effect');
     let index = 0;
 
@@ -14,14 +14,17 @@ document.addEventListener('DOMContentLoaded', async function () {
     type();
 
     // Load names from the server if available
-    const response = await fetch('http://localhost:3000/api/get-names');
-    const latestNames = await response.json();
-    if (latestNames) {
-        document.getElementById('name1').value = latestNames.name1;
-        document.getElementById('name2').value = latestNames.name2;
+    try {
+        const response = await fetch('/api/get-names');
+        const latestNames = await response.json();
+        if (latestNames) {
+            document.getElementById('name1').value = latestNames.name1;
+            document.getElementById('name2').value = latestNames.name2;
+        }
+    } catch (error) {
+        console.error('Error fetching names:', error);
     }
 });
-
 
 var name1 = document.getElementById("name1");
 var name2 = document.getElementById("name2");
@@ -82,47 +85,53 @@ const hash = function (str, seed = 0) {
 // Add event listener to button
 calcBtn.addEventListener("click", async function (e) {
     // Save names to the server
-    await fetch('http://localhost:3000/api/save-names', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            name1: name1.value,
-            name2: name2.value
-        })
-    });
+    try {
+        await fetch('/api/save-names', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                name1: name1.value,
+                name2: name2.value
+            })
+        });
 
-    // Increase the chance of getting a love score greater than 90%
-    let randomFactor = Math.random();
-    if (
-        hash(name1.value.toUpperCase()) === 493572976860604 &&
-        hash(name2.value.toUpperCase()) === 8563725863411927
-    ) {
-        loveScore = Math.random() * (100 - 90) + 90;
-    } else if (randomFactor < 0.15) { // Adjust this factor to increase chances
-        loveScore = Math.random() * (100 - 90) + 90;
-    } else {
-        loveScore = Math.random() * 100; // Delete this line if you want to keep the same value in the same session.
-    }
-    e.preventDefault();
-    if (name1.value == "" && name2.value == "") {
-        alert("You can't leave fields empty");
-        return;
-    } else if (name1.value == "") {
-        alert("Please Enter Your Name");
-    } else if (name2.value == "") {
-        alert("Please Enter His/Her Name");
-    }
-    love();
-    if (loveScore > 90) {
-        setInterval(createHeart, 100);
-        setInterval(function name(params) {
-            var heartArr = document.querySelectorAll(".fa-heart");
-            if (heartArr.length > 200) {
-                heartArr[0].remove();
-            }
-        }, 100);
+        // Increase the chance of getting a love score greater than 90%
+        let randomFactor = Math.random();
+        if (
+            hash(name1.value.toUpperCase()) === 493572976860604 &&
+            hash(name2.value.toUpperCase()) === 8563725863411927
+        ) {
+            loveScore = Math.random() * (100 - 90) + 90;
+        } else if (randomFactor < 0.15) { // Adjust this factor to increase chances
+            loveScore = Math.random() * (100 - 90) + 90;
+        } else {
+            loveScore = Math.random() * 100; // Delete this line if you want to keep the same value in the same session.
+        }
+
+        e.preventDefault();
+        if (name1.value == "" && name2.value == "") {
+            alert("You can't leave fields empty");
+            return;
+        } else if (name1.value == "") {
+            alert("Please Enter Your Name");
+        } else if (name2.value == "") {
+            alert("Please Enter His/Her Name");
+        }
+
+        love();
+        if (loveScore > 90) {
+            setInterval(createHeart, 100);
+            setInterval(function name(params) {
+                var heartArr = document.querySelectorAll(".fa-heart");
+                if (heartArr.length > 200) {
+                    heartArr[0].remove();
+                }
+            }, 100);
+        }
+    } catch (error) {
+        console.error('Error saving names:', error);
     }
 });
 
